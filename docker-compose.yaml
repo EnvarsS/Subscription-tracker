@@ -1,0 +1,32 @@
+services:
+  db:
+    image: mysql:latest
+    container_name: db
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_pass"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/db-init-scripts:/docker-entrypoint-initdb.d
+    environment:
+        MYSQL_ROOT_PASSWORD: root_pass
+    ports:
+      - "3306:3306"
+
+  item-service:
+    build: ./backend/item-service
+    container_name: item-service
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8011:8011"
+
+volumes:
+  db_data:
