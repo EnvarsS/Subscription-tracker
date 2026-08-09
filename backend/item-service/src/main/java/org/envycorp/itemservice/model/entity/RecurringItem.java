@@ -30,6 +30,9 @@ public class RecurringItem {
     private UUID userId;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private BigDecimal amount;
 
     @Column(name = "next_due_date", nullable = false)
