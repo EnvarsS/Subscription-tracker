@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "recurring_items")
-public class RecurringItems {
+public class RecurringItem {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcTypeCode(SqlTypes.CHAR)
