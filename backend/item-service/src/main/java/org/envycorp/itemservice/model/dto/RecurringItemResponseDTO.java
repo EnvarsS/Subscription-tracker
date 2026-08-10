@@ -1,8 +1,6 @@
 package org.envycorp.itemservice.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.envycorp.itemservice.model.entity.BillingCycle;
 import org.envycorp.itemservice.model.entity.ItemType;
 
@@ -11,12 +9,12 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecurringItemResponseDTO {
     private UUID id;
-    private UUID userId;
     private String name;
     private ItemType itemType;
     private BigDecimal amount;

@@ -1,8 +1,6 @@
 package org.envycorp.itemservice.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.envycorp.itemservice.exception.ItemAccessDeniedException;
 import org.envycorp.itemservice.exception.NoSuchItemWithSpecifiedIdException;
@@ -20,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,9 +31,7 @@ public class RecurringItemService {
 
     @Transactional(readOnly = true)
     public List<RecurringItemResponseDTO> getAllRecurringItems(UUID userId, ItemType itemType, Boolean isActive) {
-        return recurringItemRepository.findByUserId(userId).stream()
-                .filter(item -> itemType == null || item.getItemType().equals(itemType))
-                .filter(item -> isActive == null || item.isActive() == isActive)
+        return recurringItemRepository.findAllByUserId(userId, itemType, isActive).stream()
                 .map(item -> modelMapper.map(item, RecurringItemResponseDTO.class))
                 .toList();
     }
@@ -104,7 +101,7 @@ public class RecurringItemService {
         summary.setTotalMonthlyCosts(
                 calculateMonthlyAmountByType(items, ItemType.BILL).add(
                         calculateMonthlyAmountByType(items, ItemType.SUBSCRIPTION))
-                );
+        );
         summary.setMonthlyNet(summary.getTotalMonthlySavings().subtract(summary.getTotalMonthlyCosts()));
 
         return summary;
@@ -117,7 +114,7 @@ public class RecurringItemService {
                         switch (item.getBillingCycle()) {
                             case MONTHLY -> item.getAmount();
                             case YEARLY -> item.getAmount().divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
-                            case WEEKLY -> item.getAmount().multiply(BigDecimal.valueOf(4.33));
+                            case WEEKLY -> item.getAmount().multiply(BigDecimal.valueOf(4.33)).setScale(2, RoundingMode.HALF_UP);
                         })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
@@ -128,7 +125,11 @@ public class RecurringItemService {
 
         return items.stream()
                 .filter(RecurringItem::isActive)
-                .map(item -> item.getNextDueDate().isBefore(LocalDate.now().plusDays(days)))
+                .filter(
+                        item -> item.getNextDueDate().isBefore(LocalDate.now().plusDays(days)) &&
+                                item.getNextDueDate().isAfter(LocalDate.now())
+                )
+                .sorted(Comparator.comparing(RecurringItem::getNextDueDate))
                 .map(item -> modelMapper.map(item, RecurringItemResponseDTO.class))
                 .toList();
     }

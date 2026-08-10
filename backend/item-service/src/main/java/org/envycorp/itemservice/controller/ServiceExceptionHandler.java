@@ -18,7 +18,7 @@ public class ServiceExceptionHandler {
             NoSuchItemWithSpecifiedIdException.class
     })
     public ResponseEntity<String> handleItemsExceptions(Exception ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
