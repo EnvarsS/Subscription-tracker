@@ -53,7 +53,7 @@ public class RecurringItemController {
         return recurringItemService.updateRecurringItem(userId, id, updatedItem);
     }
 
-    @PatchMapping("/pause")
+    @PatchMapping("/{id}/pause")
     public RecurringItemResponseDTO pauseRecurringItem(@RequestHeader("X-User-Id") UUID userId, @PathVariable("id") UUID id) {
         return recurringItemService.pauseRecurringItem(userId, id);
     }
