@@ -1,0 +1,5 @@
+CREATE DATABASE IF NOT EXISTS items_db;
+CREATE USER IF NOT EXISTS 'items_user'@'%' IDENTIFIED BY 'items_pass';
+GRANT ALL PRIVILEGES ON items_db.* TO 'items_user'@'%';
+
+FLUSH PRIVILEGES;
