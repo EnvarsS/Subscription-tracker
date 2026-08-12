@@ -23,10 +23,22 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      discovery-service:
+        condition: service_started
     environment:
       SPRING_PROFILES_ACTIVE: docker
     ports:
       - "8011:8011"
+
+  discovery-service:
+    build: ./backend/discovery-service
+    container_name: discovery-service
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8001:8001"
 
 volumes:
   db_data:
