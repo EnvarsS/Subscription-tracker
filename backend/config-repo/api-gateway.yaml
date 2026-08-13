@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: api-gateway
   cloud:
     gateway:
       server:
@@ -15,6 +13,4 @@ eureka:
   instance:
     prefer-ip-address: true
 
-server:
-  port: 8000
 
