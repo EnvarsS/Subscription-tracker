@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: item-service
+              uri: lb://item-service
+              predicates:
+                - Path=/api/items/**
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+server:
+  port: 8000
+
