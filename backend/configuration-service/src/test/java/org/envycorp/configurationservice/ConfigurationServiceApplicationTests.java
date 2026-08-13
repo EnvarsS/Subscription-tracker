@@ -1,12 +1,10 @@
-package org.envycorp.apigateway;
+package org.envycorp.configurationservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
 @SpringBootTest
-class ApiGatewayApplicationTests {
+class ConfigurationServiceApplicationTests {
 
     @Test
     void contextLoads() {

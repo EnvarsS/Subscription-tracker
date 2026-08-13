@@ -27,8 +27,6 @@ services:
         condition: service_started
     environment:
       SPRING_PROFILES_ACTIVE: docker
-    ports:
-      - "8011:8011"
 
   discovery-service:
     build: ./backend/discovery-service
@@ -37,8 +35,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "8001:8001"
 
   api-gateway:
     build: ./backend/api-gateway
@@ -51,6 +47,16 @@ services:
       SPRING_PROFILES_ACTIVE: docker
     ports:
       - "8000:8000"
+
+  configuration-service:
+    build: ./backend/configuration-service
+    container_name: configuration-service
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
 
 volumes:
   db_data:

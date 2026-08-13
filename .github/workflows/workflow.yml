@@ -10,8 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        service: [item-service, discovery-service, api-gateway]
+        service: [item-service, discovery-service, api-gateway, configuration-service]
     defaults:
       run:
         working-directory: backend/${{ matrix.service }}
