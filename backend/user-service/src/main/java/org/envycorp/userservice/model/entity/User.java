@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -15,14 +16,15 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_profiles")
+@Table(name = "users")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserProfile {
+public class User {
     @Id
     @JdbcTypeCode(SqlTypes.CHAR)
     @Column(name = "user_id", nullable = false)
-    private UUID userId;
+    private UUID id;
 
     @Column(name = "display_name", length = 100)
     private String displayName;

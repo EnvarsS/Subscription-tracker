@@ -1,7 +1,10 @@
 package org.envycorp.userservice.repository;
 
-import org.envycorp.userservice.model.entity.UserProfile;
+import org.envycorp.userservice.model.DTO.UserResponseDTO;
+import org.envycorp.userservice.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<UserProfile,Long> {
+import java.util.UUID;
+
+public interface UserRepository extends JpaRepository<User,UUID> {
 }
