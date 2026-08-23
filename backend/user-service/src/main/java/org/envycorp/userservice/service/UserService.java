@@ -24,7 +24,7 @@ public class UserService {
         return mapper.map(user, UserResponseDTO.class);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UserResponseDTO createOrUpdateUser(UUID userId, UserRequestDTO userRequestDTO) {
         User user = userRepository.findById(userId)
                 .map(existingUser -> {
