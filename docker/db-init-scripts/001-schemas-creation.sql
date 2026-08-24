@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS items_db;
-CREATE USER IF NOT EXISTS 'items_user'@'%' IDENTIFIED BY 'items_pass';
+CREATE USER IF NOT EXISTS 'items_user'@'%' IDENTIFIED BY 'items_password';
 GRANT ALL PRIVILEGES ON items_db.* TO 'items_user'@'%';
 
 CREATE DATABASE IF NOT EXISTS users_db;
