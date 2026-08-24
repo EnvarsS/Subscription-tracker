@@ -4,4 +4,4 @@ eureka:
       defaultZone: http://localhost:8001/eureka/
 
 keycloak:
-  issuer-uri: http://localhost:8180/realms/subscription-tracker
+  issuer-uri: http://localhost:8080/realms/subscription-tracker
