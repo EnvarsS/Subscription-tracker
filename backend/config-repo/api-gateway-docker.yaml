@@ -2,3 +2,6 @@ eureka:
   client:
     service-url:
       defaultZone: http://discovery-service:8001/eureka/
+
+keycloak:
+  issuer-uri: http://keycloak:8080/realms/subscription-tracker
