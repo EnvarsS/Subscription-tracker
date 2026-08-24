@@ -16,6 +16,19 @@ services:
     ports:
       - "3306:3306"
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.7.1
+    container_name: keycloak
+    restart: unless-stopped
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+
   item-service:
     build: ./backend/item-service
     container_name: item-service
@@ -70,3 +83,4 @@ services:
 
 volumes:
   db_data:
+  keycloak_data:
