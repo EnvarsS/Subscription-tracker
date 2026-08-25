@@ -9,6 +9,7 @@ import org.envycorp.itemservice.model.dto.RecurringItemsSummaryResponseDTO;
 import org.envycorp.itemservice.model.entity.BillingCycle;
 import org.envycorp.itemservice.model.entity.ItemType;
 import org.envycorp.itemservice.model.entity.RecurringItem;
+import org.envycorp.itemservice.model.event.ItemEvent;
 import org.envycorp.itemservice.repository.RecurringItemRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,11 +32,15 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RecurringItemServiceTest {
+
     @Mock
     private RecurringItemRepository recurringItemRepository;
 
     @Mock
     private ModelMapper modelMapper;
+
+    @Mock
+    private ItemEventPublisher publisher;
 
     @InjectMocks
     private RecurringItemService recurringItemService;
@@ -147,10 +152,18 @@ public class RecurringItemServiceTest {
         when(recurringItemRepository.save(existingItem)).thenReturn(existingItem);
         when(modelMapper.map(existingItem, RecurringItemResponseDTO.class)).thenReturn(expectedItem);
         when(modelMapper.map(newItem, RecurringItem.class)).thenReturn(existingItem);
+        // New stub: publishEvent(...) calls this too, on the exact same
+        // "existingItem" instance - a separate overload of map(), needs
+        // its own separate stub regardless of the DTO one above.
+        when(modelMapper.map(existingItem, ItemEvent.class)).thenReturn(new ItemEvent());
 
         RecurringItemResponseDTO result = recurringItemService.createRecurringItem(userId, newItem);
 
         assertThat(result).isEqualTo(expectedItem);
+        // Confirms the service actually attempted to publish, not just
+        // that nothing crashed - a real behavioral check, same idea as
+        // the ArgumentCaptor tests below.
+        verify(publisher).publish(org.mockito.ArgumentMatchers.any(ItemEvent.class));
     }
 
     @Test
@@ -165,6 +178,7 @@ public class RecurringItemServiceTest {
         when(recurringItemRepository.findById(itemId)).thenReturn(Optional.of(existingItem));
         when(recurringItemRepository.save(existingItem)).thenReturn(existingItem);
         when(modelMapper.map(existingItem, RecurringItemResponseDTO.class)).thenReturn(expectedItem);
+        when(modelMapper.map(existingItem, ItemEvent.class)).thenReturn(new ItemEvent());
         doNothing().when(modelMapper).map(updatedItem, existingItem);
 
         RecurringItemResponseDTO result = recurringItemService.updateRecurringItem(userId, itemId, updatedItem);
@@ -178,6 +192,7 @@ public class RecurringItemServiceTest {
         when(recurringItemRepository.save(existingItem)).thenReturn(existingItem);
         when(modelMapper.map(existingItem, RecurringItemResponseDTO.class))
                 .thenReturn(new RecurringItemResponseDTO());
+        when(modelMapper.map(existingItem, ItemEvent.class)).thenReturn(new ItemEvent());
 
         recurringItemService.pauseRecurringItem(userId, itemId);
 
@@ -195,6 +210,7 @@ public class RecurringItemServiceTest {
         when(recurringItemRepository.save(existingItem)).thenReturn(existingItem);
         when(modelMapper.map(existingItem, RecurringItemResponseDTO.class))
                 .thenReturn(new RecurringItemResponseDTO());
+        when(modelMapper.map(existingItem, ItemEvent.class)).thenReturn(new ItemEvent());
 
         recurringItemService.resumeRecurringItem(userId, itemId);
 

@@ -10,6 +10,8 @@ import org.envycorp.itemservice.model.dto.RecurringItemUpdateDTO;
 import org.envycorp.itemservice.model.dto.RecurringItemsSummaryResponseDTO;
 import org.envycorp.itemservice.model.entity.ItemType;
 import org.envycorp.itemservice.model.entity.RecurringItem;
+import org.envycorp.itemservice.model.event.ItemEvent;
+import org.envycorp.itemservice.model.event.ItemEventType;
 import org.envycorp.itemservice.repository.RecurringItemRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -28,6 +31,7 @@ import java.util.UUID;
 public class RecurringItemService {
     private final RecurringItemRepository recurringItemRepository;
     private final ModelMapper modelMapper;
+    private final ItemEventPublisher publisher;
 
     @Transactional(readOnly = true)
     public List<RecurringItemResponseDTO> getAllRecurringItems(UUID userId, ItemType itemType, Boolean isActive) {
@@ -48,6 +52,9 @@ public class RecurringItemService {
 
         modelMapper.map(updatedItem, item);
         RecurringItem savedItem = recurringItemRepository.save(item);
+
+        publishEvent(savedItem, ItemEventType.UPDATED);
+
         return modelMapper.map(savedItem, RecurringItemResponseDTO.class);
     }
 
@@ -65,6 +72,8 @@ public class RecurringItemService {
     public void deleteRecurringItem(UUID userId, UUID id) {
         RecurringItem item = findRecurringItemWithUserId(id, userId);
         recurringItemRepository.delete(item);
+
+        publishEvent(item, ItemEventType.DELETED);
     }
 
     @Transactional
@@ -72,6 +81,9 @@ public class RecurringItemService {
         RecurringItem item = findRecurringItemWithUserId(id, userId);
         item.setActive(false);
         RecurringItem savedItem = recurringItemRepository.save(item);
+
+        publishEvent(savedItem, ItemEventType.PAUSED);
+
         return modelMapper.map(savedItem, RecurringItemResponseDTO.class);
     }
 
@@ -80,6 +92,9 @@ public class RecurringItemService {
         RecurringItem item = findRecurringItemWithUserId(id, userId);
         item.setActive(true);
         RecurringItem savedItem = recurringItemRepository.save(item);
+
+        publishEvent(savedItem, ItemEventType.RESUMED);
+
         return modelMapper.map(savedItem, RecurringItemResponseDTO.class);
     }
 
@@ -88,6 +103,9 @@ public class RecurringItemService {
         RecurringItem item = modelMapper.map(newItem, RecurringItem.class);
         item.setUserId(userId);
         RecurringItem savedItem = recurringItemRepository.save(item);
+
+        publishEvent(savedItem, ItemEventType.CREATED);
+
         return modelMapper.map(savedItem, RecurringItemResponseDTO.class);
     }
 
@@ -117,6 +135,14 @@ public class RecurringItemService {
                             case WEEKLY -> item.getAmount().multiply(BigDecimal.valueOf(4.33)).setScale(2, RoundingMode.HALF_UP);
                         })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private void publishEvent(RecurringItem item, ItemEventType eventType) {
+        ItemEvent publishingEvent = modelMapper.map(item, ItemEvent.class);
+        publishingEvent.setItemId(item.getId());
+        publishingEvent.setEventType(eventType);
+        publishingEvent.setOccurredAt(Instant.now());
+        publisher.publish(publishingEvent);
     }
 
     @Transactional(readOnly = true)
