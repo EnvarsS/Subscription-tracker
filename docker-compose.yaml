@@ -34,7 +34,7 @@ services:
     container_name: kafka
     restart: unless-stopped
     ports:
-      - "9092:9092"
+      - "9094:9094"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
@@ -47,79 +47,79 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
     healthcheck:
-      test: ["CMD", "/opt/kafka/bin/kafka-broker-api-versions.sh", "--bootstrap-server", "localhost:9092"]
+      test: ["CMD", "/opt/kafka/bin/kafka-broker-api-versions.sh", "--bootstrap-server", "kafka:9092"]
       interval: 10s
       timeout: 10s
       retries: 10
       start_period: 15s
 
-#  item-service:
-#    build: ./backend/item-service
-#    container_name: item-service
-#    restart: always
-#    depends_on:
-#      db:
-#        condition: service_healthy
-#      discovery-service:
-#        condition: service_started
-#      configuration-service:
-#        condition: service_healthy
-#      kafka:
-#        condition: service_started
-#    environment:
-#      SPRING_PROFILES_ACTIVE: docker
-#    volumes:
-#      - ./logs:/var/log/app
-#
-#  discovery-service:
-#    build: ./backend/discovery-service
-#    container_name: discovery-service
-#    restart: always
-#    environment:
-#      SPRING_PROFILES_ACTIVE: docker
-#    volumes:
-#      - ./logs:/var/log/app
-#
-#  api-gateway:
-#    build: ./backend/api-gateway
-#    container_name: api-gateway
-#    restart: always
-#    depends_on:
-#      discovery-service:
-#        condition: service_started
-#      configuration-service:
-#        condition: service_healthy
-#    environment:
-#      SPRING_PROFILES_ACTIVE: docker
-#    ports:
-#      - "8000:8000"
-#    volumes:
-#      - ./logs:/var/log/app
-#
-#  configuration-service:
-#    build: ./backend/configuration-service
-#    container_name: configuration-service
-#    restart: always
-#    environment:
-#      SPRING_PROFILES_ACTIVE: docker
-#    volumes:
-#      - ./logs:/var/log/app
-#
-#  user-service:
-#    build: ./backend/user-service
-#    container_name: user-service
-#    restart: always
-#    depends_on:
-#      db:
-#        condition: service_healthy
-#      configuration-service:
-#        condition: service_healthy
-#      discovery-service:
-#        condition: service_started
-#    environment:
-#      SPRING_PROFILE_ACTIVE: docker
-#    volumes:
-#      - /logs:/var/log/app
+  item-service:
+    build: ./backend/item-service
+    container_name: item-service
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      discovery-service:
+        condition: service_started
+      configuration-service:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    volumes:
+      - ./logs:/var/log/app
+
+  discovery-service:
+    build: ./backend/discovery-service
+    container_name: discovery-service
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    volumes:
+      - ./logs:/var/log/app
+
+  api-gateway:
+    build: ./backend/api-gateway
+    container_name: api-gateway
+    restart: always
+    depends_on:
+      discovery-service:
+        condition: service_started
+      configuration-service:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./logs:/var/log/app
+
+  configuration-service:
+    build: ./backend/configuration-service
+    container_name: configuration-service
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    volumes:
+      - ./logs:/var/log/app
+
+  user-service:
+    build: ./backend/user-service
+    container_name: user-service
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      configuration-service:
+        condition: service_healthy
+      discovery-service:
+        condition: service_started
+    environment:
+      SPRING_PROFILE_ACTIVE: docker
+    volumes:
+      - /logs:/var/log/app
 
 volumes:
   db_data:
