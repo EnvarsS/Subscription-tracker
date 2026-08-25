@@ -81,6 +81,18 @@ services:
     volumes:
       - ./logs:/var/log/app
 
+  user-service:
+    build: ./backend/user-service
+    container_name: user-service
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILE_ACTIVE: docker
+    volumes:
+      - /logs:/var/log/app
+
 volumes:
   db_data:
   keycloak_data:
