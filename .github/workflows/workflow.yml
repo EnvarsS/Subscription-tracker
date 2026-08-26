@@ -12,7 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        service: [item-service, discovery-service, api-gateway, configuration-service, user-service]
+        service: [item-service, discovery-service, api-gateway, configuration-service,
+                  user-service, notification-service]
     defaults:
       run:
         working-directory: backend/${{ matrix.service }}
