@@ -21,6 +21,7 @@ public class Reminder {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(updatable = false, length = 36)
     private UUID id;
 
     @JdbcTypeCode(SqlTypes.CHAR)

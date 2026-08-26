@@ -42,5 +42,4 @@ public class TrackedItem {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
-
 }
