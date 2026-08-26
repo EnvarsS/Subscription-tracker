@@ -16,7 +16,7 @@ public class EventItemListener {
     private final TrackedItemRepository trackedItemRepository;
     private final ModelMapper modelMapper;
 
-    @KafkaListener(topics = "item-service")
+    @KafkaListener(topics = "item-service", autoStartup = "${spring.kafka.listener.auto-startup:true}")
     public void handleItemEvent(ItemEvent itemEvent) {
         log.info("Received ItemEvent {}", itemEvent);
         switch (itemEvent.getEventType()) {
