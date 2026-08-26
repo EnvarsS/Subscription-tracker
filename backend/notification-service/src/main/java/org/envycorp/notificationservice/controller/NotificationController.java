@@ -4,13 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.envycorp.notificationservice.model.DTO.ReminderResponseDTO;
 import org.envycorp.notificationservice.service.NotificationService;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-@Controller
+@RestController
 @RequestMapping("/api/notifications")
 @RequiredArgsConstructor
 public class NotificationController {

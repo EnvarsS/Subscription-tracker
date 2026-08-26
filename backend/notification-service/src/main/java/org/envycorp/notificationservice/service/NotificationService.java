@@ -2,7 +2,8 @@ package org.envycorp.notificationservice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.envycorp.notificationservice.exception.ReminderAccessDenied;
+import org.envycorp.notificationservice.exception.NoSuchReminderException;
+import org.envycorp.notificationservice.exception.ReminderAccessDeniedException;
 import org.envycorp.notificationservice.model.DTO.ReminderResponseDTO;
 import org.envycorp.notificationservice.model.entity.Reminder;
 import org.envycorp.notificationservice.model.entity.TrackedItem;
@@ -28,14 +29,14 @@ public class NotificationService {
     private static final int REMIND_WINDOW_SIZE = 3;
 
     @Scheduled(cron = "0 0 8 * * *")
-    public void checkForUpcomingReminders(){
+    public void checkForUpcomingReminders() {
         LocalDate today = LocalDate.now();
         LocalDate windowEnd = today.plusDays(REMIND_WINDOW_SIZE);
 
         List<TrackedItem> trackedItemList = trackedItemRepository.findByIsActiveAndNextDueDateBetween(true, today, windowEnd);
 
-        for(TrackedItem item : trackedItemList){
-            if(reminderRepository.existsByItemIdAndDueDate(item.getItemId(),
+        for (TrackedItem item : trackedItemList) {
+            if (reminderRepository.existsByItemIdAndDueDate(item.getItemId(),
                     item.getNextDueDate()))
                 continue;
 
@@ -59,7 +60,11 @@ public class NotificationService {
     @Transactional
     public void deleteReminder(UUID userId, UUID reminderId) {
         Reminder reminder = reminderRepository.findById(reminderId)
-                .orElseThrow(() -> new ReminderAccessDenied("User " + userId + " attempted to interact item " + reminderId + " they do not own"));
+                .orElseThrow(() -> new NoSuchReminderException("No such reminder with id: " + reminderId));
+
+        if (!reminder.getUserId().equals(userId)) {
+            throw new ReminderAccessDeniedException("User " + userId + " attempted to delete reminder " + reminderId + " they do not own");
+        }
 
         reminderRepository.delete(reminder);
     }
