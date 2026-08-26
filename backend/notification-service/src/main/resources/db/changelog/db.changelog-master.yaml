@@ -1,2 +1,5 @@
 databaseChangeLog:
-  - 
+  - include:
+      file: db/changelog/changes/001-create-tracked-item-table.sql
+  - include:
+      file: db/changelog/changes/002-create-reminders-table.sql
