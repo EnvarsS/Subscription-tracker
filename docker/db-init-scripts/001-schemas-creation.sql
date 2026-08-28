@@ -10,4 +10,8 @@ CREATE DATABASE IF NOT EXISTS notifications_db;
 CREATE USER IF NOT EXISTS 'notifications_user'@'%' IDENTIFIED BY 'notifications_password';
 GRANT ALL PRIVILEGES ON notifications_db.* TO 'notifications_user'@'%';
 
+CREATE DATABASE IF NOT EXISTS dashboard_db;
+CREATE USER IF NOT EXISTS 'dashboard_user'@'%' IDENTIFIED BY 'dashboard_password';
+GRANT ALL PRIVILEGES ON dashboard_db.* TO 'dashboard_user'@'%';
+
 FLUSH PRIVILEGES;
