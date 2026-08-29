@@ -23,6 +23,7 @@ public class DashboardItem {
     @Column(name = "item_id", length = 36)
     private UUID itemId;
 
+    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(name = "user_id", nullable = false, length = 36)
     private UUID userId;
 
