@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         service: [item-service, discovery-service, api-gateway, configuration-service,
-                  user-service, notification-service]
+                  user-service, notification-service, dashboard-service]
     defaults:
       run:
         working-directory: backend/${{ matrix.service }}
