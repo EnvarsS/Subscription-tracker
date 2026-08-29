@@ -40,7 +40,7 @@ public class DashboardListener {
 
     private void pauseItem(ItemEvent itemEvent) {
         dashboardItemRepository.findById(itemEvent.getItemId()).ifPresent(trackedItem -> {
-            trackedItem.setIsActive(false);
+            trackedItem.setActive(false);
             dashboardItemRepository.save(trackedItem);
         });
     }
