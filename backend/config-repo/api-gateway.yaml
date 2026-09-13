@@ -16,6 +16,14 @@ spring:
               uri: lb://notification-service
               predicates:
                 - Path=/api/notifications/**
+            - id: dashboard-service
+              uri: lb://dashboard-service
+              predicates:
+                - Path=/api/dashboard/**
+            - id: currency-service
+              uri: lb://currency-service
+              predicates:
+                - Path=/api/currency/**
 
 eureka:
   instance:
