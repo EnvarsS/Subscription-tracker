@@ -23,7 +23,7 @@ spring:
             - id: currency-service
               uri: lb://currency-service
               predicates:
-                - Path=/api/currency/**
+                - Path=/api/currencies/**
 
 eureka:
   instance:
