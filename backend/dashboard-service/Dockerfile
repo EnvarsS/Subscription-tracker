@@ -13,5 +13,5 @@ WORKDIR /app
 
 COPY --from=build /app/target/dashboard-service-*.jar app.jar
 
-EXPOSE 8081
+EXPOSE 8014
 ENTRYPOINT ["java", "-jar", "app.jar"]
