@@ -1,10 +1,13 @@
 package org.envycorp.dashboardservice.service;
 
+import org.envycorp.dashboardservice.client.CurrencyClient;
 import org.envycorp.dashboardservice.model.dto.ItemsSummaryResponseDTO;
 import org.envycorp.dashboardservice.model.entity.BillingCycle;
 import org.envycorp.dashboardservice.model.entity.DashboardItem;
 import org.envycorp.dashboardservice.model.entity.ItemType;
+import org.envycorp.dashboardservice.model.entity.UserPreference;
 import org.envycorp.dashboardservice.repository.DashboardItemRepository;
+import org.envycorp.dashboardservice.repository.UserPreferenceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +28,12 @@ public class DashboardServiceTest {
     @Mock
     private DashboardItemRepository dashboardItemRepository;
 
+    @Mock
+    private UserPreferenceRepository userPreferenceRepository;
+
+    @Mock
+    private CurrencyClient currencyClient;
+
     @InjectMocks
     private DashboardService dashboardService;
 
@@ -32,6 +42,10 @@ public class DashboardServiceTest {
     @BeforeEach
     void setUp() {
         userId = UUID.randomUUID();
+        UserPreference preference = new UserPreference();
+        preference.setUserId(userId);
+        preference.setCurrency("EUR");
+        when(userPreferenceRepository.findById(userId)).thenReturn(Optional.of(preference));
     }
 
     @Test
@@ -79,6 +93,7 @@ public class DashboardServiceTest {
         item.setItemType(type);
         item.setBillingCycle(cycle);
         item.setAmount(new BigDecimal(amount));
+        item.setCurrency("EUR");
         item.setActive(active);
         return item;
     }
