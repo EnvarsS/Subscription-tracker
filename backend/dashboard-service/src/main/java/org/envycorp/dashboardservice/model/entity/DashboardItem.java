@@ -31,6 +31,9 @@ public class DashboardItem {
     @Column(name = "item_type", nullable = false)
     private ItemType itemType;
 
+    @Column(name = "currency", length = 3, nullable = false)
+    private String currency;
+
     @Column(nullable = false)
     private BigDecimal amount;
 
@@ -44,7 +47,4 @@ public class DashboardItem {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
-
-
-
 }

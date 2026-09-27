@@ -1,5 +1,6 @@
 package org.envycorp.currencyservice.controller;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.envycorp.currencyservice.service.CurrencyService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +17,6 @@ import java.util.Map;
 public class CurrencyController {
     private final CurrencyService currencyService;
 
-    @GetMapping("/update")
-    public void getAllCurrencies(){
-        currencyService.updateCurrenciesData();
-    }
-
     @GetMapping("/rate")
     public BigDecimal getRate(@RequestParam String from, @RequestParam String to){
         return currencyService.getRate(from, to);
@@ -29,5 +25,10 @@ public class CurrencyController {
     @GetMapping("/labels")
     public Map<String, String> getCurrenciesLabels(){
         return currencyService.getCurrenciesLabels();
+    }
+
+    @PostConstruct
+    public void init() {
+        currencyService.updateCurrenciesData();
     }
 }

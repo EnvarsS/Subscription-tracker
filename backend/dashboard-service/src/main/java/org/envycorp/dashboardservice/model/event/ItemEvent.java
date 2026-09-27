@@ -18,6 +18,7 @@ public class ItemEvent {
     private UUID userId;
     private ItemType itemType;
     private BigDecimal amount;
+    private String currency;
     private BillingCycle billingCycle;
     private Boolean active;
 }

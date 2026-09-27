@@ -13,5 +13,5 @@ WORKDIR /app
 
 COPY --from=build /app/target/notification-service-*.jar app.jar
 
-EXPOSE 8081
+EXPOSE 8013
 ENTRYPOINT ["java", "-jar", "app.jar"]

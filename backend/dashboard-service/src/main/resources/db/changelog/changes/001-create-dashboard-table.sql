@@ -1,8 +1,8 @@
 --liquibase formatted sql
---changeset dashboard-service:001-create-dashboard-table.sql
+--changeset dashboard-service:001-create-dashboard-table
 
-CREATE TABLE dashboard_items (
-    item_id       CHAR(36)      NOT NULL PRIMARY KEY,
+CREATE TABLE dashboard_items(
+    item_id       CHAR(36)      PRIMARY KEY,
     user_id       CHAR(36)      NOT NULL,
     item_type     VARCHAR(20)   NOT NULL,
     amount        DECIMAL(12,2) NOT NULL,

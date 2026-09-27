@@ -4,6 +4,7 @@ import org.envycorp.userservice.exception.NoSuchUserWithIdSpecified;
 import org.envycorp.userservice.model.DTO.UserRequestDTO;
 import org.envycorp.userservice.model.DTO.UserResponseDTO;
 import org.envycorp.userservice.model.entity.User;
+import org.envycorp.userservice.model.event.UserPreferenceEvent;
 import org.envycorp.userservice.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,9 @@ public class UserServiceTest {
 
     @Mock
     private ModelMapper mapper;
+
+    @Mock
+    private UserPublisher userPublisher;
 
     @InjectMocks
     private UserService userService;
@@ -137,6 +141,7 @@ public class UserServiceTest {
         userService.deleteUser(userId);
 
         verify(userRepository).delete(existingUser);
+        verify(userPublisher).publish(any(UserPreferenceEvent.class));
     }
 
     @Test

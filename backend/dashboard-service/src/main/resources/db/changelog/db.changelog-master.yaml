@@ -1,3 +1,7 @@
 databaseChangeLog:
   - include: 
       file: db/changelog/changes/001-create-dashboard-table.sql
+  - include:
+      file: db/changelog/changes/002-create-user-preference-table.sql
+  - include:
+      file: db/changelog/changes/003-add-currency-to-dashboard-service.sql
