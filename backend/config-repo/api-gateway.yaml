@@ -20,6 +20,14 @@ spring:
               uri: lb://auth-service
               predicates:
                 - Path=/api/auth/**
+            - id: dashboard-service
+              uri: lb://dashboard-service
+              predicates:
+                - Path=/api/dashboard/**
+            - id: currency-service
+              uri: lb://currency-service
+              predicates:
+                - Path=/api/currencies/**
 
 eureka:
   instance:

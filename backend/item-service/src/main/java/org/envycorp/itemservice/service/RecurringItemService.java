@@ -109,34 +109,6 @@ public class RecurringItemService {
         return modelMapper.map(savedItem, RecurringItemResponseDTO.class);
     }
 
-    @Transactional(readOnly = true)
-    public RecurringItemsSummaryResponseDTO getRecurringItemsSummary(UUID userId) {
-        RecurringItemsSummaryResponseDTO summary = new RecurringItemsSummaryResponseDTO();
-
-        List<RecurringItem> items = recurringItemRepository.findByUserId(userId);
-
-        summary.setTotalMonthlySavings(calculateMonthlyAmountByType(items, ItemType.SAVING));
-        summary.setTotalMonthlyCosts(
-                calculateMonthlyAmountByType(items, ItemType.BILL).add(
-                        calculateMonthlyAmountByType(items, ItemType.SUBSCRIPTION))
-        );
-        summary.setMonthlyNet(summary.getTotalMonthlySavings().subtract(summary.getTotalMonthlyCosts()));
-
-        return summary;
-    }
-
-    private BigDecimal calculateMonthlyAmountByType(List<RecurringItem> items, ItemType type) {
-        return items.stream()
-                .filter(item -> item.getItemType().equals(type))
-                .map(item ->
-                        switch (item.getBillingCycle()) {
-                            case MONTHLY -> item.getAmount();
-                            case YEARLY -> item.getAmount().divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
-                            case WEEKLY -> item.getAmount().multiply(BigDecimal.valueOf(4.33)).setScale(2, RoundingMode.HALF_UP);
-                        })
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
     private void publishEvent(RecurringItem item, ItemEventType eventType) {
         ItemEvent publishingEvent = modelMapper.map(item, ItemEvent.class);
         publishingEvent.setItemId(item.getId());

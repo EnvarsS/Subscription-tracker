@@ -33,11 +33,6 @@ public class RecurringItemController {
         return recurringItemService.getRecurringItemById(userId, id);
     }
 
-    @GetMapping("/summary")
-    public RecurringItemsSummaryResponseDTO getRecurringItemsSummary(@RequestHeader("X-User-Id") UUID userId) {
-        return recurringItemService.getRecurringItemsSummary(userId);
-    }
-
     @GetMapping("upcoming/{days}")
     public List<RecurringItemResponseDTO> getUpcomingRecurringItems(@RequestHeader("X-User-Id") UUID userId, @PathVariable("days") int days) {
         return recurringItemService.getUpcomingRecurringItems(userId, days);

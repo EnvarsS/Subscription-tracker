@@ -2,8 +2,8 @@ package org.envycorp.notificationservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.envycorp.notificationservice.model.DTO.ReminderResponseDTO;
+import org.envycorp.notificationservice.model.entity.TrackedItem;
 import org.envycorp.notificationservice.service.NotificationService;
-import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,8 +14,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class NotificationController {
     private final NotificationService notificationService;
-    private final ModelMapper modelMapper;
-
 
     @GetMapping
     public List<ReminderResponseDTO> getAllReminders(@RequestHeader("X-User-Id") UUID userId){

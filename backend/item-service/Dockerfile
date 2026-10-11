@@ -13,5 +13,5 @@ WORKDIR /app
 
 COPY --from=build /app/target/item-service-*.jar app.jar
 
-EXPOSE 8081
+EXPOSE 8011
 ENTRYPOINT ["java", "-jar", "app.jar"]

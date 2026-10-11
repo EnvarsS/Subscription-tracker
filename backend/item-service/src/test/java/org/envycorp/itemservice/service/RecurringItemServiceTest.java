@@ -220,38 +220,6 @@ public class RecurringItemServiceTest {
         assertThat(itemCaptor.getValue().isActive()).isTrue();
     }
 
-    @Test
-    void getRecurringItemsSummary_calculatesMonthlyNetCorrectly() {
-        RecurringItem subscription = createItem(ItemType.SUBSCRIPTION, BillingCycle.MONTHLY,
-                BigDecimal.valueOf(10), true, LocalDate.now().plusDays(5));
-
-        RecurringItem yearlyBill = createItem(ItemType.BILL, BillingCycle.YEARLY,
-                BigDecimal.valueOf(120), true, LocalDate.now().plusDays(5));
-
-        RecurringItem weeklySaving = createItem(ItemType.SAVING, BillingCycle.WEEKLY,
-                BigDecimal.valueOf(10), true, LocalDate.now().plusDays(5));
-
-        when(recurringItemRepository.findByUserId(userId))
-                .thenReturn(List.of(subscription, yearlyBill, weeklySaving));
-
-        RecurringItemsSummaryResponseDTO result = recurringItemService.getRecurringItemsSummary(userId);
-
-        assertThat(result.getTotalMonthlyCosts()).isEqualByComparingTo(BigDecimal.valueOf(20));
-        assertThat(result.getTotalMonthlySavings()).isEqualByComparingTo(BigDecimal.valueOf(43.30));
-        assertThat(result.getMonthlyNet()).isEqualByComparingTo(BigDecimal.valueOf(23.30));
-    }
-
-    @Test
-    void getRecurringItemsSummary_returnsZeroes_whenUserHasNoItems() {
-        when(recurringItemRepository.findByUserId(userId)).thenReturn(List.of());
-
-        RecurringItemsSummaryResponseDTO result = recurringItemService.getRecurringItemsSummary(userId);
-
-        assertThat(result.getTotalMonthlyCosts()).isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(result.getTotalMonthlySavings()).isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(result.getMonthlyNet()).isEqualByComparingTo(BigDecimal.ZERO);
-    }
-
     private RecurringItem createItem(ItemType type, BillingCycle cycle, BigDecimal amount,
                                      boolean active, LocalDate dueDate) {
         RecurringItem item = new RecurringItem();

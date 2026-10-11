@@ -11,4 +11,6 @@ import java.util.UUID;
 @Repository
 public interface TrackedItemRepository extends JpaRepository<TrackedItem, UUID> {
     List<TrackedItem> findByIsActiveAndNextDueDateBetween(Boolean isActive, LocalDate nextDueDateAfter, LocalDate nextDueDateBefore);
+
+    List<TrackedItem> findAllByUserId(UUID userId);
 }

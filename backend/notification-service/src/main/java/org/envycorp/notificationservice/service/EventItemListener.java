@@ -31,6 +31,7 @@ public class EventItemListener {
                 .orElseGet(TrackedItem::new);
 
         modelMapper.map(itemEvent, trackedItem);
+        trackedItem.setIsActive(itemEvent.isActive());
         trackedItemRepository.save(trackedItem);
     }
 

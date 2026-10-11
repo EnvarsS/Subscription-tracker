@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.envycorp.apigateway.model.MutableHttpServletRequest;
 import org.envycorp.apigateway.service.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -52,6 +54,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         catch (JwtException e){
             SecurityContextHolder.clearContext();
+            log.error("JWT validation failed: {}", e.getMessage());
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
