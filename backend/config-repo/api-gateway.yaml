@@ -16,6 +16,10 @@ spring:
               uri: lb://notification-service
               predicates:
                 - Path=/api/notifications/**
+            - id: auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/api/auth/**
             - id: dashboard-service
               uri: lb://dashboard-service
               predicates:
